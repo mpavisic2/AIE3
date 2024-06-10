@@ -37,7 +37,7 @@ class TextFileLoader:
             self.load_directory()
         elif os.path.isfile(self.path) and self.path.endswith(".txt"):
             self.load_file()
-            self.load_file()
+            
         else:
             raise ValueError(
                 "Provided path is neither a valid directory nor a .txt file."

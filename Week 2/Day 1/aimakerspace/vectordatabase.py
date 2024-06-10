@@ -12,6 +12,18 @@ def cosine_similarity(vector_a: np.array, vector_b: np.array) -> float:
     norm_b = np.linalg.norm(vector_b)
     return dot_product / (norm_a * norm_b)
 
+# add euclidean distance to the code
+def euclidean_distance(vector_a: np.array, vector_b: np.array,prob_calc=True):
+    # np.sqrt(np.sum((np.array(x)-np.array(y))**2))
+    distance = np.linalg.norm(np.array(vector_a)-np.array(vector_b))
+
+    if prob_calc:
+        # gaussian_kernel
+        sigma=1
+        distance = np.exp(- (distance ** 2) / (2 * sigma ** 2))
+        
+        
+    return distance
 
 class VectorDatabase:
     def __init__(self, embedding_model: EmbeddingModel = None):
@@ -37,10 +49,11 @@ class VectorDatabase:
         self,
         query_text: str,
         k: int,
-        distance_measure: Callable = cosine_similarity,
+        distance_metric = "cosine",
         return_as_text: bool = False,
     ) -> List[Tuple[str, float]]:
         query_vector = self.embedding_model.get_embedding(query_text)
+        distance_measure: Callable = euclidean_distance if distance_metric=="euclidean" else cosine_similarity
         results = self.search(query_vector, k, distance_measure)
         return [result[0] for result in results] if return_as_text else results
 
